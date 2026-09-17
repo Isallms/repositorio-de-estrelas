@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Céu Estrelado & Galáxia Interativa</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <!-- Canvas Principal -->
+  <canvas id="starfield"></canvas>
+
+  <!-- Dica de Interação Flutuante no Topo -->
+  <div class="hint-banner" id="hintBanner">
+    <span>✨ <strong>Dicas:</strong> Mova o mouse para navegar &bull; Clique para lançar meteoros &bull; Pressione <kbd>Espaço</kbd> para Hiperespaço &bull; <kbd>H</kbd> oculta o painel</span>
+  </div>
+
+  <!-- Botão de Alternância do Painel de Controle -->
+  <button id="hudToggleBtn" class="hud-toggle-btn" title="Alternar Painel de Controle">
+    <svg viewBox="0 0 24 24" width="22" height="22" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="3"></circle>
+      <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+    </svg>
+  </button>
+
+  <!-- Painel de Controle Estilo Glassmorphism -->
+  <aside class="control-panel" id="controlPanel">
+    <div class="panel-header">
+      <div class="logo-area">
+        <span class="cosmos-icon">🌌</span>
+        <div>
+          <h2>Observatório Cosmos</h2>
+          <p class="subtitle">Simulação Estelar 3D</p>
+        </div>
+      </div>
+      <button id="closePanelBtn" class="close-btn" title="Recolher painel">&times;</button>
+    </div>
+
+    <div class="panel-body">
+      <!-- Paleta de Cores -->
+      <section class="control-group">
+        <label class="group-title">Tema Cósmico</label>
+        <div class="theme-grid">
+          <button class="theme-btn active" data-theme="deepSpace">
+            <span class="color-dot deep-space"></span>
+            Espaço Profundo
+          </button>
+          <button class="theme-btn" data-theme="violetNebula">
+            <span class="color-dot violet-nebula"></span>
+            Nebulosa Violeta
+          </button>
+          <button class="theme-btn" data-theme="supernova">
+            <span class="color-dot supernova"></span>
+            Supernova Ouro
+          </button>
+          <button class="theme-btn" data-theme="aurora">
+            <span class="color-dot aurora"></span>
+            Aurora Boreal
+          </button>
+        </div>
+      </section>
+
+      <!-- Sliders de Parâmetros -->
+      <section class="control-group">
+        <div class="slider-header">
+          <label for="starCount">Densidade de Estrelas</label>
+          <span id="starCountVal" class="val-badge">1200</span>
+        </div>
+        <input type="range" id="starCount" min="200" max="3000" step="100" value="1200">
+
+        <div class="slider-header">
+          <label for="speedSlider">Velocidade de Viagem</label>
+          <span id="speedVal" class="val-badge">1.0x</span>
+        </div>
+        <input type="range" id="speedSlider" min="0.1" max="5.0" step="0.1" value="1.0">
+
+        <div class="slider-header">
+          <label for="starSize">Tamanho das Estrelas</label>
+          <span id="starSizeVal" class="val-badge">1.5x</span>
+        </div>
+        <input type="range" id="starSize" min="0.8" max="3.5" step="0.1" value="1.5">
+      </section>
+
+      <!-- Alternadores / Efeitos -->
+      <section class="control-group">
+        <label class="group-title">Efeitos Dinâmicos</label>
+        
+        <label class="toggle-item">
+          <span>🚀 Modo Hiperespaço (Warp Speed)</span>
+          <input type="checkbox" id="warpToggle">
+          <span class="toggle-switch"></span>
+        </label>
+
+        <label class="toggle-item">
+          <span>✨ Modo Constelações</span>
+          <input type="checkbox" id="constellationsToggle" checked>
+          <span class="toggle-switch"></span>
+        </label>
+
+        <label class="toggle-item">
+          <span>🌫️ Nebulosa & Poeira Estelar</span>
+          <input type="checkbox" id="nebulaToggle" checked>
+          <span class="toggle-switch"></span>
+        </label>
+
+        <label class="toggle-item">
+          <span>🌟 Cintilação Realista</span>
+          <input type="checkbox" id="twinkleToggle" checked>
+          <span class="toggle-switch"></span>
+        </label>
+      </section>
+
+      <!-- Ações Rápidas -->
+      <section class="control-group action-group">
+        <button id="meteorBtn" class="btn btn-primary">
+          💫 Lançar Estrela Cadente
+        </button>
+        <div class="btn-row">
+          <button id="pauseBtn" class="btn btn-secondary">
+            ⏸️ Pausar
+          </button>
+          <button id="screenshotBtn" class="btn btn-secondary">
+            📸 Salvar Foto
+          </button>
+        </div>
+        <button id="resetBtn" class="btn btn-tertiary">
+          ↺ Restaurar Padrões
+        </button>
+      </section>
+
+      <!-- Estatísticas em Tempo Real -->
+      <div class="stats-footer">
+        <span>FPS: <strong id="fpsVal">60</strong></span>
+        <span>Estrelas: <strong id="activeStarsVal">1200</strong></span>
+        <span>Meteoros: <strong id="activeMeteorsVal">0</strong></span>
+      </div>
+    </div>
+  </aside>
+
+  <script src="script.js"></script>
+</body>
+</html>
